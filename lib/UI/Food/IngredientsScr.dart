@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:inshape/UI/Food/PreparationScr.dart';
 import 'package:inshape/data_models/recipe.dart';
-import 'package:inshape/providers/favourites.dart';
 import 'package:inshape/providers/recepie.dart';
 import 'package:inshape/providers/recipe_favourite.dart';
 import 'package:inshape/utils/colors.dart';

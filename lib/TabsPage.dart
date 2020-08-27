@@ -10,7 +10,7 @@ import 'package:inshape/UI/Regeneration/RegenerationScr.dart';
 import 'package:inshape/UI/Registrierung/SelectGoal1.dart';
 import 'package:inshape/data_models/MusleType.dart';
 import 'package:inshape/data_models/diet_plans.dart';
-import 'package:inshape/data_models/goal.dart';
+import 'package:inshape/data_models/goal.dart'; 
 import 'package:inshape/data_models/profile.dart';
 import 'package:inshape/data_models/quotes.dart';
 import 'package:inshape/data_models/workout_type.dart';
