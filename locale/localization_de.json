@@ -1,0 +1,17 @@
+{
+  "Main": "Mein Programm",
+  "Overview": "Uebersicht",
+  "Select_atleast_Workout": "Wählen Sie mindestens einen Trainingstyp aus",
+  "Select_atleast_muscle": "Wählen Sie mindestens einen Muskeltyp",
+  "Further": "Weiter",
+  "No_Workout": "Kein Training verfügbar",
+  "Add_workout": "Zu dem Workout hinzufugen?",
+  "Want_Edit_Workout":"Willst du dein Workout Plan wirklich bearbeiten?",
+  "Reset":"Zurucksetzen",
+  "Take_over":"Übernehmen",
+  "Recommended":"Empfohlen",
+  "Other_daily_goals":"Andere Tagesziele",
+  "days_training":"Tage trainieren",
+  "building_muscle":"Fitness - Muskelaufbau",
+  "days":"Tage"
+}

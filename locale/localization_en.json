@@ -1,0 +1,17 @@
+{
+    "Main": "Main Program",
+    "Overview": "Overview",
+    "Select_atleast_Workout": "Select at least one workout type",
+    "Select_atleast_muscle": "Select at least one muscle type",
+    "Further": "Further",
+    "No_Workout": "No Workout Available",
+    "Add_workout": "Add to workout?",
+    "Want_Edit_Workout": "Do you really want to edit your workout plan?",
+    "Reset":"Reset to default",
+    "Take_over":"Take over",
+    "Recommended":"Recommended",
+    "Other_daily_goals":"Other daily goals",
+    "days_training":"days training",
+    "building_muscle":"Fitness - building muscle",
+    "days":"Days"
+}
