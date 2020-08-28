@@ -172,7 +172,8 @@ class _IngredientsScrState extends State<IngredientsScr> {
                 boxShape: NeumorphicBoxShape.roundRect(
                   BorderRadius.circular(10),
                 ),
-                child: Center(
+                child: Container(
+                  margin: EdgeInsets.only(top:12,left:16),
                   child: Text(
                     "Zutaten für $noOfPersons Portionen",
                     style: TextStyle(color: Color(0xFFC8C8C8), fontSize: 16.0),
@@ -526,13 +527,13 @@ class _IngredientsScrState extends State<IngredientsScr> {
                   //SizedBox(height: 4.0),
                   Container(
                       //color: Colors.red,
-                      width: constraints.maxWidth * .46,
+                      width:txt2 !="easy"?constraints.maxWidth * .46:constraints.maxWidth * .7,
                       child: txt2 != ""
                           ? Text(
                               () {
                                 switch (txt2.toLowerCase()) {
                                   case "easy":
-                                    return "Einfach";
+                                    return "Leichte Zubereitung";
                                     break;
 
                                   case "medium":
@@ -548,10 +549,12 @@ class _IngredientsScrState extends State<IngredientsScr> {
                                     break;
                                 }
                               }(),
-                              overflow: TextOverflow.ellipsis,
+                              overflow:txt2 !="easy"? TextOverflow.ellipsis:null,
+                              textAlign:txt2 =="easy"? TextAlign.center:null,
                               style: TextStyle(
                                 color: Color(0xFFC8C8C8),
-                                fontSize: 12,
+                                
+                                fontSize:txt2 !="easy"? 12:10,
                               ),
                             )
                           : Container()
