@@ -281,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     )
                   : SizedBox(),
               SizedBox(
-                height: 48.0,
+                height: size.height*.04,
               ),
 
               //TextField 2 Starts Here
@@ -365,7 +365,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 child: Container(
                   margin: EdgeInsets.only(
-                    top: 16.0,
+                    top:size.height*.02,
                     bottom: size.height * .05,
                   ),
                   child: Text(

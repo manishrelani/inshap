@@ -28,9 +28,60 @@ class _NewPasswordState extends State<NewPassword> {
   bool _isLoading = false;
   String otp;
   RegResponse res;
+
   Auth auth = Auth();
   TextEditingController passwordController1 = new TextEditingController();
   TextEditingController passwordController2 = new TextEditingController();
+
+  String confirmPasswordError = "Please re-enter your password";
+  String passwordError = "Please enter your password";
+
+  @override
+  void initState() {
+    super.initState();
+    passwordController2.addListener(validateConfirmPassword);
+    passwordController1.addListener(validatePassword);
+  }
+
+  validatePassword() {
+    final pass = passwordController1.text;
+    if (!pass.contains(RegExp('[^A-Za-z0-9]')) ||
+        !pass.contains(RegExp(r'[A-Z]')) ||
+        !pass.contains(RegExp(r'[0-9]'))) {
+      setState(() {
+        passwordError =
+            "Password must contain Alpha numerical characters , special characters & case sensitive";
+      });
+    } else {
+      setState(() {
+        passwordError = " ";
+      });
+      final confirmPassword = passwordController2.text;
+      if (pass == confirmPassword) {
+        setState(() {
+          confirmPasswordError = " ";
+        });
+      } else {
+        setState(() {
+          confirmPasswordError = "Passwords do not match";
+        });
+      }
+    }
+  }
+
+  validateConfirmPassword() {
+    final password = passwordController1.text;
+    final confirmPassword = passwordController2.text;
+    if (password == confirmPassword) {
+      setState(() {
+        confirmPasswordError = " ";
+      });
+    } else {
+      setState(() {
+        confirmPasswordError = "Passwords do not match";
+      });
+    }
+  }
 
   resetPassword(email, otp, pass) async {
     debugPrint(email);
@@ -93,11 +144,11 @@ class _NewPasswordState extends State<NewPassword> {
                 actions: <Widget>[
                   CupertinoDialogAction(
                       isDefaultAction: true,
-                      onPressed: () { 
+                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PasswordReset(), 
+                            builder: (context) => PasswordReset(),
                           ),
                         );
                       },
@@ -126,12 +177,11 @@ class _NewPasswordState extends State<NewPassword> {
         false;
   }
 
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return WillPopScope(
-       onWillPop: () async => _onWillPop(),
+      onWillPop: () async => _onWillPop(),
       child: Scaffold(
         backgroundColor: AppColors.primaryBackground,
         body: SafeArea(
@@ -156,7 +206,7 @@ class _NewPasswordState extends State<NewPassword> {
                             size: size.height * .035,
                           ),
                           onPressed: () {
-                           _onWillPop();
+                            _onWillPop();
                           },
                         ),
                       ),
@@ -249,6 +299,17 @@ class _NewPasswordState extends State<NewPassword> {
                         ),
                       ),
 
+                      passwordError.length > 3
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
+                              child: Text(
+                                passwordError,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          : SizedBox(),
+
                       SizedBox(
                         height: size.height * .02,
                       ),
@@ -308,6 +369,18 @@ class _NewPasswordState extends State<NewPassword> {
                           ],
                         ),
                       ),
+
+                      confirmPasswordError.length > 3
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
+                              child: Text(
+                                confirmPasswordError,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          : SizedBox(),
+
                       GestureDetector(
                         onTap: () {
                           setState(() {
