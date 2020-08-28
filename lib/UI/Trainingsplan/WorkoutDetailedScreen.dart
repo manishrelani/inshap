@@ -54,6 +54,7 @@ class _WorkoutDetailedScreenState extends State<WorkoutDetailedScreen> {
   }
 
   getAllNotes() async {
+    note.clear();
     setState(() {
       isLoading = true;
     });
@@ -107,8 +108,11 @@ class _WorkoutDetailedScreenState extends State<WorkoutDetailedScreen> {
   }
 
   Future<http.Response> deleteNotes(String id) async {
+    setState(() {
+      isLoading = true;
+    });
     var response = await http.delete(
-      'https://inshape-api.cadoangelus.me/note/5eeb350fa9b4900488c27376/',
+      'https://inshape-api.cadoangelus.me/note/$id',
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Cookie': SessionProvider.jwt,
@@ -116,9 +120,10 @@ class _WorkoutDetailedScreenState extends State<WorkoutDetailedScreen> {
       },
     );
     if (response.statusCode == 200) {
-      AppToast.show('Notes Deleted successfully');
+      AppToast.show('Note Deleted successfully');
       setState(() {
-        getAllNotes();
+        note.removeWhere((element) => element["noteId"] == id);
+        isLoading = false;
       });
     }
     return response;
@@ -353,32 +358,50 @@ class _WorkoutDetailedScreenState extends State<WorkoutDetailedScreen> {
                                         return Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 8.0, vertical: 6.0),
-                                            child: Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(12.0),
-                                                color: Colors.white12,
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12.0),
+                                                    color: Colors.white12,
+                                                  ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                            .symmetric(
                                                         vertical: 12.0,
                                                         horizontal: 6.0),
-                                                child: Wrap(
-                                                  children: [
-                                                    Text(
-                                                      note[index]['text'],
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 16.0,
-                                                      ),
+                                                    child: Wrap(
+                                                      children: [
+                                                        Text(
+                                                          note[index]['text'],
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16.0,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
-                                              ),
+                                                Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: GestureDetector(
+                                                    child: Icon(
+                                                      Icons.close,
+                                                      color: Colors.white,
+                                                    ),
+                                                    onTap: () {
+                                                      deleteNotes(note[index]
+                                                          ["noteId"]);
+                                                    },
+                                                  ),
+                                                )
+                                              ],
                                             ));
                                       },
                                     ),
@@ -461,7 +484,6 @@ class _WorkoutDetailedScreenState extends State<WorkoutDetailedScreen> {
                                         notesController.text);
 
                                     notesController.clear();
-                                    note.clear();
                                   }
                                 });
                               },
