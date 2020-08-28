@@ -53,7 +53,7 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
       bottomNavigationBar: BottomNav(index: 1),
       appBar: AppBar(
         backgroundColor: AppColors.primaryBackground,
-        title: Text(_localization.localeString("OverView")),
+        title: Text(_localization.localeString("Overview")),
         elevation: 0.0,
         centerTitle: true,
         leading: IconButton(
@@ -288,11 +288,13 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
                 GestureDetector(
                   onTap: () {
                     if (selectedWorkouts.length == 0) {
-                      AppToast.show(_localization.localeString("Select_atleast_Workout"));
+                      AppToast.show(
+                          _localization.localeString("Select_atleast_Workout"));
                       return;
                     }
                     if (selectedMuscleTypesList.length == 0) {
-                      AppToast.show(_localization.localeString("Select_atleast_muscle"));
+                      AppToast.show(
+                          _localization.localeString("Select_atleast_muscle"));
                       return;
                     }
                     print(selectedWorkouts);
@@ -449,18 +451,18 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
             ),
             style: NeumorphicStyle(
                 color: Color(0xFF16162B),
-                depth: 2,
-                shadowLightColor: Color(0xFF707070),
-                shadowDarkColor: Colors.black),
+                depth: 4,
+                shadowLightColor: Color(0xFF2B2B41),
+                shadowDarkColor: Color(0xFF0A0A14)),
           )
         : Neumorphic(
             boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(10)),
             style: NeumorphicStyle(
-              depth: -2,
+              depth: -5,
               color: Color(0xFF16162B),
-              shadowDarkColor: Colors.black,
-              shadowDarkColorEmboss: Colors.black,
-              shadowLightColorEmboss: Color(0xFF707070),
+              shadowDarkColor: Color(0xFF0A0A14),
+              shadowDarkColorEmboss: Color(0xFF0A0A14),
+              shadowLightColorEmboss: AppColors.shadowLightColor,
             ),
             child: Center(
               child: Text(

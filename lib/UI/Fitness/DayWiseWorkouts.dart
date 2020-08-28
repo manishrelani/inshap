@@ -113,7 +113,7 @@ class DayWiseWorkouts extends StatelessWidget {
             },
             splashColor: Colors.transparent,
             child: MainButton(
-              txt: "Ubung hinzufugen",
+              txt: "Übung hinzufügen",
               height: 50.0,
               txtColor: AppColors.green,
             ),

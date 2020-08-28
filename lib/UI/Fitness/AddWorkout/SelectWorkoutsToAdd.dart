@@ -69,7 +69,7 @@ class _SelectWorkoutsToAddState extends State<SelectWorkoutsToAdd> {
       bottomNavigationBar: BottomNav(index: 1), 
       appBar: AppBar(
         backgroundColor: AppColors.primaryBackground,
-        title: Text(_localization.localeString("OverView")),
+        title: Text(_localization.localeString("Overview")),
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
