@@ -143,5 +143,3 @@ class _InShapeAppState extends State<InShapeApp> {
           );
   }
 }
-
-
