@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:inshape/Backend/profile.dart';
 import 'package:inshape/Model/style.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,38 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       }
     });
     super.initState();
+  }
+
+  //Handle Back Button
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+            context: context,
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+              child: CupertinoAlertDialog(
+                title: Text("Password updated successfully"),
+                content: Container(
+                    margin: EdgeInsets.only(top: 5),
+                    child: Text(
+                      "",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    )),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                      isDefaultAction: true,
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Ok",
+                        style: TextStyle(
+                            color: Color(0xFF007AFF),
+                            fontWeight: FontWeight.normal),
+                      )),
+                ],
+              ),
+            ))) ??
+        false;
   }
 
   @override
@@ -208,8 +241,12 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       newPasswordVerification.clear();
       var jsonResponse = json.decode(response);
       //if (jsonResponse['error'] == true) {
-      AppToast.show("${jsonResponse['message']}");
-      //}
+        print("${jsonResponse['message']}");
+      if (jsonResponse['message'] == 'DB update operation success') {
+        _onWillPop();
+      } else {
+        AppToast.show("${jsonResponse['message']}");
+      }
     }
   }
 }
