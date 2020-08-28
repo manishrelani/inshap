@@ -36,8 +36,8 @@ class _Abonnement1State extends State<Abonnement1> {
         ),
         body: ListView(
           padding: EdgeInsets.only(
-            left: totalwidth * .028,
-            right: totalwidth * .028,
+            //left: totalwidth * .024,
+            //right: totalwidth * .024,
           ),
           children: <Widget>[
             SizedBox(
@@ -65,7 +65,7 @@ class _Abonnement1State extends State<Abonnement1> {
                   "Unbegrenzter Zugang du allen Workouts und maßgeschneiderte Workoutpläne. ",
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Colors.white.withOpacity(0.4),
+                    color: Colors.white.withOpacity(0.5),
                   ),
                   textAlign: TextAlign.center,
                 )
@@ -181,15 +181,16 @@ class _Abonnement1State extends State<Abonnement1> {
             Container(
               //color: Colors.red,
               margin: EdgeInsets.only(
-                // left: totalwidth * .01,
-                // right: totalwidth * .01,
+                 left: totalwidth * .012,
+                 right: totalwidth * .012,
+                
               ),
               child: Text(
                 "Dein iTunes-Konto wird mit dem Gesamtbetrag für den Abonnementzeitraum belastet. Sofern du die automatische Verlängerung nicht mindestens 24 Stunden vor Ablauf des Abonnementzeitraums beendest, verlängert sich das Abonnement automatisch zum selben Preis und dein iTunes-Konto wird dementsprechend belastet. Du kannst das Abonnement jederzeit verwalten und die automatische Verlängerung in den Kontoeinstellungen für deine Apple ID deaktivieren. Nicht genutzte Zeiträume einer kostenlosen Testphase verfallen bei der Anmeldung eines Abonnements ohne Testphase.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 13.0,
-                  color: Colors.white.withOpacity(0.4),
+                  fontSize: 11.7,
+                  color: Colors.white.withOpacity(0.5),
                 ),
               ),
             ),
