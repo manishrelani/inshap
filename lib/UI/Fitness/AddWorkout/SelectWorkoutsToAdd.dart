@@ -41,18 +41,23 @@ class _SelectWorkoutsToAddState extends State<SelectWorkoutsToAdd> {
         .trainingPlans[widget.trainingPlanId].plans[widget.day];
 
     List<String> showTheseWorkouts = [];
+    List<String> contain = [];
+    List<String> notContain = [];
 
     workoutsProvider.workouts.values.toList().forEach((Workout workout) {
       // should satisfy the workout type
       if (widget.selectedWorkouts.contains(workout.type)) {
         // should satisfy the muscle selected
-        if (widget.selectedMuscleTypes.any(
-            (muscleType) => widget.selectedMuscleTypes.contains(muscleType))) {
-          // shouldn't be already in the training plan
+        if (widget.selectedMuscleTypes.any((muscleType) {
+          print("muscleType: $muscleType");
+          return workout.targetMuscles.contains(muscleType);
+        })) {
           trainingPlans.forEach((Plan plan) {
             plan.workouts.forEach((WorkoutId workoutId) {
-              if (!workoutId.workoutId.contains(workout.id)) {
-                showTheseWorkouts.add(workoutId.workoutId);
+              if (workoutId.workoutId.contains(workout.id)) {
+                contain.add(workout.id);
+              } else {
+                notContain.add(workout.id);
               }
             });
           });
@@ -60,13 +65,17 @@ class _SelectWorkoutsToAddState extends State<SelectWorkoutsToAdd> {
       }
     });
 
-    showTheseWorkouts = showTheseWorkouts.toSet().toList();
+    notContain.removeWhere((element) {
+      return contain.contains(element);
+    });
 
-    print("Suggested ${showTheseWorkouts.length}");
+    showTheseWorkouts = notContain.toSet().toList();
+
+    print("Suggested $showTheseWorkouts");
 
     return Scaffold(
       backgroundColor: AppColors.primaryBackground,
-      bottomNavigationBar: BottomNav(index: 1), 
+      bottomNavigationBar: BottomNav(index: 1),
       appBar: AppBar(
         backgroundColor: AppColors.primaryBackground,
         title: Text(_localization.localeString("Overview")),
