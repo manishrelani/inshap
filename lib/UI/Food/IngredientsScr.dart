@@ -23,13 +23,14 @@ class IngredientsScr extends StatefulWidget {
 
 class _IngredientsScrState extends State<IngredientsScr> {
   int noOfPersons = 4;
-
   @override
   Widget build(BuildContext context) {
     final favouritesProvider = Provider.of<RecipeFavouritesProvider>(context);
     final recepie =
         Provider.of<RecepiesProvider>(context).recepies[widget.recepieId];
     print("reci $recepie");
+    print("fsddfghjkhgfdsjkjhgfdsf");
+    print(recepie.difficulties);
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -403,41 +404,67 @@ class _IngredientsScrState extends State<IngredientsScr> {
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: AppColors.green, fontSize: 16)),
               SizedBox(height: 4.0),
-              /* Text(
-                spec,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: Color(0xFFC8C8C8), fontSize: 12),
-              ) */
-              Text(
-                () {
-                  switch (spec.toLowerCase()) {
-                    case "calories":
-                      return "Kalorien";
-                      break;
+              // Text(
+              //   spec,
+              //   overflow: TextOverflow.ellipsis,
+              //   style: TextStyle(color: Color(0xFFC8C8C8), fontSize: 12),
+              // )
+              Container(
+                  child: spec != ""
+                      ? Text(
+                          () {
+                            switch (spec.toLowerCase()) {
+                              case "calories":
+                                return "Kalorien";
+                                break;
 
-                    case "protein":
-                      return "Eiweiß";
-                      break;
+                              case "protein":
+                                return "Eiweiß";
+                                break;
 
-                    case "carbohydrate":
-                      return "Kohlenhydrate";
-                      break;
+                              case "carbohydrate":
+                                return "Kohlenhydrate";
+                                break;
 
-                    case "fat":
-                      return "Fett";
-                      break;
+                              case "fat":
+                                return "Fett";
+                                break;
+                            }
+                          }(),
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Color(0xFFC8C8C8),
+                            fontSize: 12,
+                          ),
+                        )
+                      : Container()
+                  // : Text(
+                  //     () {
+                  //       switch (spec.toLowerCase()) {
+                  //         case "calories":
+                  //           return "Kalorien";
+                  //           break;
 
-                    default: 
-                    return "error";
-                    break;  
-                  }
-                }(),
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Color(0xFFC8C8C8),
-                  fontSize: 12,
-                ),
-              )
+                  //         case "protein":
+                  //           return "Eiweiß";
+                  //           break;
+
+                  //         case "carbohydrates":
+                  //           return "Kohlenhydrate";
+                  //           break;
+
+                  //         case "fat":
+                  //           return "Fett";
+                  //           break;
+                  //       }
+                  //     }(),
+                  //     overflow: TextOverflow.ellipsis,
+                  //     style: TextStyle(
+                  //       color: Color(0xFFC8C8C8),
+                  //       fontSize: 12,
+                  //     ),
+                  //   ))
+                  )
             ],
           ),
         ),
@@ -499,13 +526,42 @@ class _IngredientsScrState extends State<IngredientsScr> {
                   ),
                   //SizedBox(height: 4.0),
                   Container(
-                    //color: Colors.red,
-                    width: constraints.maxWidth * .46,
-                    child: Text(txt2,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            TextStyle(color: Color(0xFFC8C8C8), fontSize: 11)),
-                  )
+                      //color: Colors.red,
+                      width: constraints.maxWidth * .46,
+                      child: txt2 != ""
+                          ? Text(
+                              () {
+                                switch (txt2.toLowerCase()) {
+                                  case "easy":
+                                    return "Einfach";
+                                    break;
+
+                                  case "medium":
+                                    return "Mittel";
+                                    break;
+
+                                  case "hard":
+                                    return "schwer";
+                                    break;
+
+                                  case " minuten":
+                                    return "Minuten";
+                                    break;
+                                }
+                              }(),
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Color(0xFFC8C8C8),
+                                fontSize: 12,
+                              ),
+                            )
+                          : Container()
+                      //   Text(
+                      //     txt2,
+                      //     overflow: TextOverflow.ellipsis,
+                      //     style: TextStyle(color: Color(0xFFC8C8C8), fontSize: 11),
+                      //   ),
+                      )
                 ],
               ),
         );
