@@ -21,34 +21,95 @@ class _UpdatePasswordState extends State<UpdatePassword> {
 
   String oldPasswordError = "Please enter old password";
   String error = "Please enter new password";
+  String passwordError = " ";
+  String confirmPasswordError = " ";
+
+  validatePassword() {
+    final pass = newPassword.text;
+    if (!pass.contains(RegExp('[^A-Za-z0-9]')) ||
+        !pass.contains(RegExp(r'[A-Z]')) ||
+        !pass.contains(RegExp(r'[0-9]'))) {
+      setState(() {
+        passwordError =
+            "Password must contain Alpha numerical characters , special characters & case sensitive";
+      });
+    } else {
+      setState(() {
+        passwordError = " ";
+      });
+      final confirmPassword = newPasswordVerification.text;
+      if (pass == confirmPassword) {
+        setState(() {
+          confirmPasswordError = "";
+        });
+      } else {
+        setState(() {
+          confirmPasswordError = "Passwords do not match";
+        });
+      }
+    }
+  }
+
+  validateConfirmPassword() {
+    final password = newPassword.text;
+    final confirmPassword = newPasswordVerification.text;
+    if (password == confirmPassword) {
+      setState(() {
+        confirmPasswordError = "";
+      });
+    } else {
+      setState(() {
+        confirmPasswordError = "Passwords do not match";
+      });
+    }
+  }
 
   @override
   void initState() {
+    super.initState();
     oldPassword.addListener(() {
-      if (oldPassword.text.length > 6) {
+      if (oldPassword.text.length > 0) {
         setState(() {
           oldPasswordError = "";
         });
       } else {
         setState(() {
-          oldPasswordError = "Please enter valid old password";
+          oldPasswordError = "Please enter old password";
         });
       }
     });
-    newPasswordVerification.addListener(() {
-      if (newPassword.text.length > 6 &&
-          newPasswordVerification.text == newPassword.text) {
-        setState(() {
-          error = "";
-        });
-      } else {
-        setState(() {
-          error = "New password and verify password doesn\'t match";
-        });
-      }
-    });
-    super.initState();
+
+    newPassword.addListener(validatePassword);
+    newPasswordVerification.addListener(validateConfirmPassword);
   }
+
+  // @override
+  // void initState() {
+  //   oldPassword.addListener(() {
+  //     if (oldPassword.text.length > 6) {
+  //       setState(() {
+  //         oldPasswordError = "";
+  //       });
+  //     } else {
+  //       setState(() {
+  //         oldPasswordError = "Please enter valid old password";
+  //       });
+  //     }
+  //   });
+  //   newPasswordVerification.addListener(() {
+  //     if (newPassword.text.length > 6 &&
+  //         newPasswordVerification.text == newPassword.text) {
+  //       setState(() {
+  //         error = "";
+  //       });
+  //     } else {
+  //       setState(() {
+  //         error = "New password and verify password doesn\'t match";
+  //       });
+  //     }
+  //   });
+  //   super.initState();
+  // }
 
   //Handle Back Button
   Future<bool> _onWillPop() async {
@@ -111,6 +172,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                 obscureText: true,
                 controller: oldPassword,
                 cursorColor: AppColors.green,
+                keyboardType: TextInputType.emailAddress,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -134,10 +196,15 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white)),
               SizedBox(height: 16.0),
-              TextFormField(
+              TextField(
                 obscureText: true,
                 controller: newPassword,
+                keyboardType: TextInputType.emailAddress,
                 cursorColor: AppColors.green,
+                maxLength: 15,
+                buildCounter: (BuildContext context,
+                        {int currentLength, int maxLength, bool isFocused}) =>
+                    null,
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -156,10 +223,27 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                       ),
                     )),
               ),
+              SizedBox(height: 2.0),
+              passwordError.length > 3
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
+                      child: Text(
+                        passwordError,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : SizedBox(),
               SizedBox(height: 16.0),
               TextFormField(
                 obscureText: true,
                 controller: newPasswordVerification,
+                maxLength: 15,
+                keyboardType: TextInputType.emailAddress,
+                buildCounter: (BuildContext context,
+                        {int currentLength, int maxLength, bool isFocused}) =>
+                    null,
                 cursorColor: AppColors.green,
                 style: TextStyle(
                   color: Colors.white,
@@ -180,9 +264,20 @@ class _UpdatePasswordState extends State<UpdatePassword> {
                     )),
               ),
               SizedBox(height: 16.0),
-              Text('$error',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white)),
+              confirmPasswordError.length > 3
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
+                      child: Text(
+                        confirmPasswordError,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  : SizedBox(),
+
+              // Text('$error',
+              //     textAlign: TextAlign.center,
+              //     style: TextStyle(color: Colors.white)),
               SizedBox(height: 64.0),
               InkWell(
                 onTap: () {
@@ -229,7 +324,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   }
 
   void updatePassword() async {
-    if (oldPassword.text.length > 6 && error.length <= 0) {
+    if (oldPassword.text.length > 0  && confirmPasswordError.length <= 0) {
       FocusScope.of(context).requestFocus(FocusNode());
       showLoader(isModal: true);
       String response =
@@ -239,9 +334,13 @@ class _UpdatePasswordState extends State<UpdatePassword> {
       oldPassword.clear();
       newPassword.clear();
       newPasswordVerification.clear();
+      setState(() {
+        passwordError="";
+        oldPasswordError="";
+      });
       var jsonResponse = json.decode(response);
       //if (jsonResponse['error'] == true) {
-        print("${jsonResponse['message']}");
+      print("${jsonResponse['message']}");
       if (jsonResponse['message'] == 'DB update operation success') {
         _onWillPop();
       } else {
