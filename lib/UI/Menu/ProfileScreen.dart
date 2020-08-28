@@ -34,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var url = 'https://inshape-api.cadoangelus.me/profile/upload/avatar';
 
   getCameraImage() async {
-    final pickedFile =
+    final pickedFile = 
         await picker.getImage(source: ImageSource.camera, imageQuality: 20);
     setState(() {
       if (pickedFile != null) {

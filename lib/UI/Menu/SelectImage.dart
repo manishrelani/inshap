@@ -5,8 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:inshape/Model/style.dart';
-import 'package:inshape/UI/Menu/GalleryScreen.dart';
-import 'package:inshape/UI/Menu/ProfileScreen.dart';
+import 'package:inshape/TabsPage.dart';
 import 'package:inshape/Widget/MainButton.dart';
 import 'package:inshape/Widget/bottom_navigation.dart';
 import 'package:inshape/providers/session.dart';
@@ -29,20 +28,20 @@ class _SelectImageState extends State<SelectImage> {
   Future getCameraImage() async {
     pickedFile = await picker.getImage(source: ImageSource.camera);
     setState(() {
-      _image = File(pickedFile.path);
+      if (pickedFile != null) _image = File(pickedFile.path);
       if (_image != null) {
         setState(() {
-           print("Loading Start");
+          print("Loading Start");
           isLoading = true;
         });
       }
-    }); 
+    });
   }
 
   Future getGalleryImage() async {
     pickedFile = await picker.getImage(source: ImageSource.gallery);
     setState(() {
-      _image = File(pickedFile.path);
+      if (pickedFile != null) _image = File(pickedFile.path);
       if (_image != null) {
         setState(() {
           print("Loading Start");
@@ -95,7 +94,7 @@ class _SelectImageState extends State<SelectImage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child:  Scaffold(
+      child: Scaffold(
           backgroundColor: AppColors.primaryBackground,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
@@ -107,9 +106,6 @@ class _SelectImageState extends State<SelectImage> {
                   print("Pop Button Press");
                   Navigator.pop(
                     context,
-                    ProfileScreen(
-                      key: PageStorageKey('profile-screen'),
-                    ),
                   );
                 }),
             title: Text(
@@ -119,57 +115,62 @@ class _SelectImageState extends State<SelectImage> {
             ),
           ),
           body: Center(
-            child: isCropLoading == true ? Center(
-              child: CircularProgressIndicator(),
-            ) : _image == null
-                ? GestureDetector(
-                    onTap: selectOption,
-                    child: Icon(
-                      Icons.camera_alt,
-                      color: Color(0xffC8B375),
-                      size: 100.0,
-                    ),
+            child: isCropLoading == true
+                ? Center(
+                    child: CircularProgressIndicator(),
                   )
-                : isLoading == false
-                    ? Center(
-                        child: CircularProgressIndicator(),
+                : _image == null
+                    ? GestureDetector(
+                        onTap: selectOption,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: Color(0xffC8B375),
+                          size: 100.0,
+                        ),
                       )
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.69,
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12.0),
-                                child: Image.file(
-                                  _image,
-                                  fit: BoxFit.cover,
-                                )),
-                          ),
+                    : isLoading == false
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.69,
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    child: Image.file(
+                                      _image,
+                                      fit: BoxFit.cover,
+                                    )),
+                              ),
 
-                          //Button
-                          GestureDetector(
-                            onTap: () {
-                              if (_image != null) {
-                                setState(() {
-                                  isCropLoading = true;
-                                  uploadImage(pickedFile.path);
-                                });
-                              }
-                            },
-                            child: MainButton(
-                              txt: "Speichern",
-                              height: MediaQuery.of(context).size.height * 0.06,
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              txtColor: Color(0xffC8B375),
-                            ),
+                              //Button
+                              GestureDetector(
+                                onTap: () {
+                                  if (_image != null) {
+                                    setState(() {
+                                      isCropLoading = true;
+                                      uploadImage(pickedFile.path);
+                                    });
+                                  }
+                                },
+                                child: MainButton(
+                                  txt: "Speichern",
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.06,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  txtColor: Color(0xffC8B375),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
           ),
           bottomNavigationBar: BottomNav(index: 4)),
     );
@@ -190,7 +191,7 @@ class _SelectImageState extends State<SelectImage> {
       request.headers.addAll(headers);
       request.files.add(await http.MultipartFile.fromPath('gallery', image));
       var res = await request.send();
-      AppToast.show('${res.reasonPhrase}');
+     // AppToast.show('${res.reasonPhrase}');
       print("res: ${res.reasonPhrase}");
 
       if (res.reasonPhrase == 'OK') {
@@ -202,7 +203,9 @@ class _SelectImageState extends State<SelectImage> {
         isLoading = false;
         isCropLoading = true;
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => GalleryScreen()));
+          context,
+          MaterialPageRoute(builder: (context) =>TabsPage(index: 4,)),
+        );
       });
     } catch (e) {
       print(e.toString());
