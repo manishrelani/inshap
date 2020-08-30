@@ -98,7 +98,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   txt: "Registrieren",
                   height: size.height * .065,
                   margin: EdgeInsets.only(
-                    bottom: size.height * .15,
+                    bottom: size.height * .12,
                   ),
                 ),
               ),
