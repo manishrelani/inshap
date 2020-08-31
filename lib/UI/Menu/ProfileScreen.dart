@@ -148,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void dispose() {
-    subscription.cancle();
+  //  subscription.cancle();
     super.dispose();
   }
 
