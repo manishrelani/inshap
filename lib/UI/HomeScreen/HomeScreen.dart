@@ -548,7 +548,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         width: totalWidth,
                       ),
                   fit: BoxFit.cover,
-                  imageUrl: goalsProvider.goals[profileProvider.profile.goal].thumbnailUrl == null ? "https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80" :  goalsProvider.goals[profileProvider.profile.goal].thumbnailUrl ),
+                  imageUrl: goalsProvider.goals[profileProvider.profile.goal]?.thumbnailUrl == null ? "https://images.unsplash.com/photo-1434682881908-b43d0467b798?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=753&q=80" :  goalsProvider.goals[profileProvider.profile.goal].thumbnailUrl ),
             ),
           ),
           Container(
