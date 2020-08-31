@@ -123,7 +123,7 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
                     // Button 2
                     GestureDetector(
                       onTap: () {
-                        if (!ruckenChecked) {
+                        if (!shoulderChecked) {
                           selectedMuscleTypesList.add(muscleTypesProvider
                               .muscleTypes.values
                               .toList()[1]
@@ -135,7 +135,7 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
                               .id);
                         }
                         setState(() {
-                          ruckenChecked = !ruckenChecked;
+                          shoulderChecked = !shoulderChecked;
                         });
                       },
                       child: Container(
@@ -143,7 +143,7 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
                         width: size.width * .3,
                         child: newbutton(
                             "${muscleTypesProvider.muscleTypes.values.toList()[1].name}",
-                            !ruckenChecked),
+                            !shoulderChecked),
                       ),
                     ),
 
@@ -161,7 +161,7 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
                     // Button 3
                     GestureDetector(
                       onTap: () {
-                        if (!shoulderChecked) {
+                        if (!ruckenChecked) {
                           selectedMuscleTypesList.add(muscleTypesProvider
                               .muscleTypes.values
                               .toList()[2]
@@ -173,7 +173,7 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
                               .id);
                         }
                         setState(() {
-                          shoulderChecked = !shoulderChecked;
+                          ruckenChecked = !ruckenChecked;
                         });
                       },
                       child: Container(
@@ -181,7 +181,7 @@ class _InitAddOwnWorkoutsState extends State<InitAddOwnWorkouts> {
                         width: size.width * .3,
                         child: newbutton(
                             "${muscleTypesProvider.muscleTypes.values.toList()[2].name}",
-                            !shoulderChecked),
+                            !ruckenChecked),
                       ),
                     ),
 

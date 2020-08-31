@@ -87,9 +87,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<ProfileProvider>(context, listen: false);
     final gallery =
-        Provider.of<ProfileProvider>(context, listen: false).profile.gallery;
+        Provider.of<ProfileProvider>(context).profile.gallery;
     print(gallery.length);
     var totalHeight = MediaQuery.of(context).size.height;
     var totalWidth = MediaQuery.of(context).size.width;

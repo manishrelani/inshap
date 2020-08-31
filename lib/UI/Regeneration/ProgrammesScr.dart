@@ -75,7 +75,10 @@ class _ProgrammesScrState extends State<ProgrammesScr> {
   Widget build(BuildContext context) {
     final rege = Provider.of<RegenerationWoroutProvider>(context).regeneration;
     final regeneration = rege.values.where((element) {
+      if(element!=null)
       return element.regName.toLowerCase().contains(searchText.toLowerCase());
+      else 
+      return false;
     }).toList();
     final favouritesProvider =
         Provider.of<RegenerationFavouritesProvider>(context);

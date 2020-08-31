@@ -21,17 +21,19 @@ class FavouriteRegenScr extends StatefulWidget {
 class _FavouriteRegenScrState extends State<FavouriteRegenScr> {
   // bool isPressed = false;
   String searchText = "";
+  var favourite;
   @override
   Widget build(BuildContext context) {
     final fav = Provider.of<RegenerationFavouritesProvider>(context);
     print(fav.regFavourites);
-    final favourite = fav.regFavourites.where((element) {
-      if (element != null)
+
+    favourite = fav.regFavourites.where((element) {
+      if (widget.regeneration.values.any((value) => element == value.id))
         return widget.regeneration[element].regName
             .toLowerCase()
             .contains(searchText.toLowerCase());
       else
-       return false;
+        return false;
     }).toList();
     var size = MediaQuery.of(context).size;
     return SafeArea(

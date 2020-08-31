@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -34,17 +37,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var url = 'https://inshape-api.cadoangelus.me/profile/upload/avatar';
 
   getCameraImage() async {
-    final pickedFile = 
+    final pickedFile =
         await picker.getImage(source: ImageSource.camera, imageQuality: 20);
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
       }
       if (_image != null) {
-        setState(() {
-          isLoading = true;
-          uploadAvatar(pickedFile.path);
-        });
+        uploadAvatar(pickedFile.path);
       }
     });
   }
@@ -53,14 +53,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final pickedFile =
         await picker.getImage(source: ImageSource.gallery, imageQuality: 20);
     setState(() {
-     if (pickedFile != null) {
+      if (pickedFile != null) {
         _image = File(pickedFile.path);
       }
       if (_image != null) {
-        setState(() {
-          isLoading = true;
-          uploadAvatar(pickedFile.path);
-        });
+        uploadAvatar(pickedFile.path);
       }
     });
   }
@@ -121,6 +118,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool eightColor = false;
   bool nineColor = false;
   bool tenColor = false;
+  var isDeviceConnected = false;
+  var subscription;
+
+  Future<bool> checkInternet() {
+    return DataConnectionChecker().hasConnection;
+  }
+
+  @override
+  void initState() {
+    checkInternet().then((onValue) {
+      isDeviceConnected = onValue;
+
+      setState(() {});
+    });
+
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        isDeviceConnected = await DataConnectionChecker().hasConnection;
+      } else {
+        isDeviceConnected = false;
+      }
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    subscription.cancle();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final profile = Provider.of<ProfileProvider>(context).profile;
     final temp = Provider.of<ProfileProvider>(context);
     final avtarUrl = (Provider.of<ProfileProvider>(context).profile.avtarUrl);
-    final gallery = Provider.of<ProfileProvider>(context).profile.gallery;
+    // final gallery = Provider.of<ProfileProvider>(context).profile.gallery;
     // final goalsProvider = Provider.of<GoalsProvider>(context);
     // final dietsProvider = Provider.of<DietPlansProvider>(context);
 
@@ -817,7 +847,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: minVerticalPadding * 2),
                     GestureDetector(
                       onTap: () {
-                        print("Button Press");
+                        //  print("Button Press");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -860,27 +890,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   uploadAvatar(String filename) async {
-    print("Info Data");
-    try {
-      var headers = {
-        'accept': "application/json",
-        'Cookie': SessionProvider.jwt,
-        'Content-Type': 'multipart/form-data'
-      };
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.headers.addAll(headers);
-      request.files.add(await http.MultipartFile.fromPath('avatar', filename));
-      var res = await request.send();
-      AppToast.show('Profile Updated');
-      print("res: ${res.reasonPhrase}");
+    if (isDeviceConnected) {
+      //  print("Info Data");
       setState(() {
-        isLoading = false;
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TabsPage()));
+        isLoading = true;
       });
-    } catch (e) {
-      print(e.toString());
-    }
+      try {
+        var headers = {
+          'accept': "application/json",
+          'Cookie': SessionProvider.jwt,
+          'Content-Type': 'multipart/form-data'
+        };
+        var request = http.MultipartRequest('POST', Uri.parse(url));
+        request.headers.addAll(headers);
+        request.files
+            .add(await http.MultipartFile.fromPath('avatar', filename));
+        var res = await request.send();
+
+        print("res: ${res.reasonPhrase}");
+        if (res.reasonPhrase == "OK") {
+          AppToast.show('Profile Updated');
+          Timer(Duration(seconds: 1), () {
+            setState(() {
+              isLoading = false;
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => TabsPage()));
+            });
+          });
+        } else {
+          setState(() {
+            isLoading = false;
+
+            AppToast.show('Error To upload');
+          });
+        }
+      } catch (e) {
+        print(e.toString());
+        AppToast.show('something went wrong ${e.toString}');
+      }
+    } else
+      AppToast.show('Please Check internet connection');
   }
 
   Future<bool> onWillPop() {

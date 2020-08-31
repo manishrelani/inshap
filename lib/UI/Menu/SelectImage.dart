@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:connectivity/connectivity.dart';
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +27,37 @@ class _SelectImageState extends State<SelectImage> {
 
   var pickedFile;
 
+  var isDeviceConnected = false;
+  var subscription;
+
+  Future<bool> checkInternet() {
+    return DataConnectionChecker().hasConnection;
+  }
+
+  @override
+  void initState() {
+    checkInternet().then((onValue) {
+      isDeviceConnected = onValue;
+
+      setState(() {});
+    });
+
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) async {
+      if (result != ConnectivityResult.none) {
+        isDeviceConnected = await DataConnectionChecker().hasConnection;
+      } else {
+        isDeviceConnected = false;
+      }
+      setState(() {});
+    });
+    super.initState();
+  }
+
   Future getCameraImage() async {
-    pickedFile = await picker.getImage(source: ImageSource.camera);
+    pickedFile =
+        await picker.getImage(source: ImageSource.camera, imageQuality: 20);
     setState(() {
       if (pickedFile != null) _image = File(pickedFile.path);
       if (_image != null) {
@@ -39,7 +70,8 @@ class _SelectImageState extends State<SelectImage> {
   }
 
   Future getGalleryImage() async {
-    pickedFile = await picker.getImage(source: ImageSource.gallery);
+    pickedFile =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 20);
     setState(() {
       if (pickedFile != null) _image = File(pickedFile.path);
       if (_image != null) {
@@ -178,37 +210,55 @@ class _SelectImageState extends State<SelectImage> {
 
   //upload images
   uploadImage(image) async {
-    print("Info Data");
-    final url = 'https://inshape-api.cadoangelus.me/profile/upload/gallery';
+    if (isDeviceConnected) {
+      // print("Info Data");
+      final url = 'https://inshape-api.cadoangelus.me/profile/upload/gallery';
 
-    try {
-      var headers = {
-        'accept': "application/json",
-        'Cookie': SessionProvider.jwt,
-        'Content-Type': 'multipart/form-data'
-      };
-      var request = http.MultipartRequest('POST', Uri.parse(url));
-      request.headers.addAll(headers);
-      request.files.add(await http.MultipartFile.fromPath('gallery', image));
-      var res = await request.send();
-     // AppToast.show('${res.reasonPhrase}');
-      print("res: ${res.reasonPhrase}");
+      try {
+        var headers = {
+          'accept': "application/json",
+          'Cookie': SessionProvider.jwt,
+          'Content-Type': 'multipart/form-data'
+        };
+        var request = http.MultipartRequest('POST', Uri.parse(url));
+        request.headers.addAll(headers);
+        request.files.add(await http.MultipartFile.fromPath('gallery', image));
+        var res = await request.send();
+        // AppToast.show('${res.reasonPhrase}');
+        print("res: ${res.reasonPhrase}");
 
-      if (res.reasonPhrase == 'OK') {
+        if (res.reasonPhrase == 'OK') {
+          setState(() {
+            AppToast.show('Image Added successfully');
+            isLoading = false;
+            isCropLoading = true;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TabsPage(
+                        index: 4,
+                      )),
+            );
+          });
+        } else {
+          setState(() {
+            AppToast.show('Somthing went wrong');
+            isLoading = false;
+            isCropLoading = true;
+            Navigator.pop(context);
+          });
+        }
+      } catch (e) {
+        print(e.toString());
         setState(() {
-          AppToast.show('Image Added successfully');
+          AppToast.show("Error ${e.toString()}");
+          isLoading = false;
+          isCropLoading = true;
+          Navigator.pop(context);
         });
       }
-      setState(() {
-        isLoading = false;
-        isCropLoading = true;
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>TabsPage(index: 4,)),
-        );
-      });
-    } catch (e) {
-      print(e.toString());
+    } else {
+      AppToast.show("Please Check internet");
     }
   }
 }

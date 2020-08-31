@@ -172,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               // Button 2
                               GestureDetector(
                                 onTap: () {
-                                  if (!ruckenChecked) {
+                                  if (!shoulderChecked) {
                                     selectedMuscleTypesList.add(
                                         muscleTypesProvider.muscleTypes.values
                                             .toList()[1]
@@ -184,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .id);
                                   }
                                   setState(() {
-                                    ruckenChecked = !ruckenChecked;
+                                    shoulderChecked = !shoulderChecked;
                                   });
                                 },
                                 child: Container(
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: size.width * .3,
                                   child: newbutton(
                                       "${muscleTypesProvider.muscleTypes.values.toList()[1].name}",
-                                      !ruckenChecked),
+                                      !shoulderChecked),
                                 ),
                               ),
 
@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               // Button 3
                               GestureDetector(
                                 onTap: () {
-                                  if (!shoulderChecked) {
+                                  if (!ruckenChecked){
                                     selectedMuscleTypesList.add(
                                         muscleTypesProvider.muscleTypes.values
                                             .toList()[2]
@@ -222,7 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             .id);
                                   }
                                   setState(() {
-                                    shoulderChecked = !shoulderChecked;
+                                    ruckenChecked = !ruckenChecked;
                                   });
                                 },
                                 child: Container(
@@ -230,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: size.width * .3,
                                   child: newbutton(
                                       "${muscleTypesProvider.muscleTypes.values.toList()[2].name}",
-                                      !shoulderChecked),
+                                      !ruckenChecked),
                                 ),
                               ),
 

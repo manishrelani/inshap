@@ -20,8 +20,6 @@ class _FavdietScrState extends State<FavdietScr> {
   @override
   Widget build(BuildContext context) {
     final recepies = Provider.of<RecepiesProvider>(context).recepies;
-    print(
-        "fav : ${Provider.of<RecipeFavouritesProvider>(context).recFavourites}");
     final favouritesProvider = Provider.of<RecipeFavouritesProvider>(context)
         .recFavourites
         .where((element) {
